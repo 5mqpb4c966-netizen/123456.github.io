@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学伴Pro - 全场景学习辅助助手</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --success: #4ade80;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: white;
+            color: var(--primary);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 核心痛点部分 */
+        .pain-points {
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        
+        .pain-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .pain-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .pain-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pain-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .pain-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* 功能模块部分 */
+        .features {
+            margin-bottom: 3rem;
+        }
+        
+        .feature-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-tab {
+            padding: 10px 20px;
+            background: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            border: 2px solid transparent;
+        }
+        
+        .feature-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .feature-tab:hover:not(.active) {
+            border-color: var(--primary);
+        }
+        
+        .feature-content {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+        
+        .feature-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .feature-desc {
+            margin-bottom: 1.5rem;
+            color: var(--gray);
+        }
+        
+        .feature-example {
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .example-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        /* 优势对比部分 */
+        .advantages {
+            margin-bottom: 3rem;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+        }
+        
+        .comparison-table thead {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .comparison-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .checkmark {
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        .crossmark {
+            color: var(--danger);
+        }
+        
+        /* 底部样式 */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            margin-top: 3rem;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #495057;
+            color: #adb5bd;
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .logo-area {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .cta-buttons {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
+            
+            .comparison-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo-area">
+                <div class="logo">
+                    <div class="logo-icon">📚</div>
+                    <div class="logo-text">学伴Pro</div>
+                </div>
+                <div class="cta-buttons">
+                    <button class="btn btn-primary">立即体验</button>
+                    <button class="btn btn-secondary">了解更多</button>
+                </div>
+            </div>
+            <h1>全场景学习辅助助手</h1>
+            <p class="tagline">解决"学习目标不清晰、碎片化知识难整合、学练用脱节、缺乏个性化反馈"四大痛点，让学习从"被动接收"变成"主动闭环"</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="pain-points">
+            <h2 class="section-title">解决四大学习痛点</h2>
+            <div class="pain-cards">
+                <div class="pain-card">
+                    <div class="pain-icon">🎯</div>
+                    <h3 class="pain-title">目标不清晰</h3>
+                    <p>不知道学什么、学到哪，盲目跟风学习，缺乏明确路径</p>
+                </div>
+                <div class="pain-card">
+                    <div class="pain-icon">🧩</div>
+                    <h3 class="pain-title">知识碎片化</h3>
+                    <p>网课、笔记、文章等信息零散，难以形成系统知识体系</p>
+                </div>
+                <div class="pain-card">
+                    <div class="pain-icon">🔁</div>
+                    <h3 class="pain-title">学练用脱节</h3>
+                    <p>学了知识点但不会应用，刷了题但不知道错在哪里</p>
+                </div>
+                <div class="pain-card">
+                    <div class="pain-icon">📊</div>
+                    <h3 class="pain-title">缺乏个性化反馈</h3>
+                    <p>千篇一律的学习方案，无法针对个人薄弱点精准提升</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <h2 class="section-title">核心功能模块</h2>
+            <div class="feature-tabs">
+                <div class="feature-tab active" data-tab="target">智能目标拆解</div>
+                <div class="feature-tab" data-tab="knowledge">知识整合助手</div>
+                <div class="feature-tab" data-tab="practice">个性化练习库</div>
+                <div class="feature-tab" data-tab="feedback">实时反馈与复盘</div>
+                <div class="feature-tab" data-tab="tools">轻量化工具集</div>
+            </div>
+            
+            <div class="feature-content active" id="target-content">
+                <div class="feature-header">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">智能目标拆解</h3>
+                </div>
+                <p class="feature-desc">把"大目标"拆解成"可落地的小任务"，根据你的学习节奏动态调整进度</p>
+                
+                <div class="feature-example">
+                    <div class="example-title">示例：3个月通过英语四级</div>
+                    <p>第1-4周：背完300个高频词 + 掌握听力技巧</p>
+                    <p>第5-8周：刷10套阅读真题 + 练习写作模板</p>
+                    <p>第9-12周：模拟考试 + 错题复盘</p>
+                    <p>每个小任务标注"预计耗时"和"核心目标"，如"本周背词重点：四级听力高频词"</p>
+                </div>
+            </div>
+            
+            <div class="feature-content" id="knowledge-content">
+                <div class="feature-header">
+                    <div class="feature-icon">🧩</div>
+                    <h3 class="feature-title">知识整合助手</h3>
+                </div>
+                <p class="feature-desc">将碎片化信息转化为结构化知识体系，自动提取核心内容并建立关联</p>
+                
+                <div class="feature-example">
+                    <div class="example-title">示例：Excel函数学习</div>
+                    <p>上传PPT后自动梳理：VLOOKUP函数定义 → 语法 → 例题 → 易错点</p>
+                    <p>自动补充相似函数(INDEX+MATCH)的区别，推荐关联知识点</p>
+                </div>
+            </div>
+            
+            <div class="feature-content" id="practice-content">
+                <div class="feature-header">
+                    <div class="feature-icon">📝</div>
+                    <h3 class="feature-title">个性化练习库</h3>
+                </div>
+                <p class="feature-desc">根据你的薄弱点生成针对性题目，拒绝盲目刷题，只练需要的部分</p>
+                
+                <div class="feature-example">
+                    <div class="example-title">示例：数学几何证明题</div>
+                    <p>正确率仅60% → 多生成"相似题型+逐步提示"题目</p>
+                    <p>第一步：先找全等三角形的条件</p>
+                    <p>第二步：证明对应边相等</p>
+                    <p>第三步：得出结论</p>
+                </div>
+            </div>
+            
+            <div class="feature-content" id="feedback-content">
+                <div class="feature-header">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">实时反馈与复盘</h3>
+                </div>
+                <p class="feature-desc">智能分析错误原因，提供针对性改进建议，定期生成学习报告</p>
+                
+                <div class="feature-example">
+                    <div class="example-title">示例：错题分析</div>
+                    <p>知识类错误：没记住VLOOKUP函数的绝对引用规则 → 跳转知识点复习</p>
+                    <p>方法类错误：数学大题没写解题步骤 → 给出步骤规范建议</p>
+                    <p>粗心类错误：英语单复数漏写 → 生成粗心点提醒清单</p>
+                </div>
+            </div>
+            
+            <div class="feature-content" id="tools-content">
+                <div class="feature-header">
+                    <div class="feature-icon">🛠️</div>
+                    <h3 class="feature-title">轻量化工具集</h3>
+                </div>
+                <p class="feature-desc">一站式解决学习中的小麻烦，无需切换多个APP</p>
+                
+                <div class="feature-example">
+                    <div class="example-title">工具列表</div>
+                    <p>智能OCR：手写笔记转电子版</p>
+                    <p>实时翻译：外文资料一键翻译+生词标注</p>
+                    <p>专注计时：番茄工作法+专注统计</p>
+                    <p>计划同步：学习任务同步到日历，可分享给监督人</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="advantages">
+            <h2 class="section-title">核心优势对比</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>功能对比</th>
+                        <th>学伴Pro</th>
+                        <th>传统题库APP</th>
+                        <th>笔记APP</th>
+                        <th>计划APP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>个性化学习路径</td>
+                        <td class="checkmark">✓ 动态调整</td>
+                        <td class="crossmark">✗ 固定模式</td>
+                        <td class="crossmark">✗ 无此功能</td>
+                        <td class="crossmark">✗ 手动设置</td>
+                    </tr>
+                    <tr>
+                        <td>知识体系构建</td>
+                        <td class="checkmark">✓ 自动整合</td>
+                        <td class="crossmark">✗ 无此功能</td>
+                        <td class="checkmark">✓ 手动整理</td>
+                        <td class="crossmark">✗ 无此功能</td>
+                    </tr>
+                    <tr>
+                        <td>精准练习推荐</td>
+                        <td class="checkmark">✓ 基于薄弱点</td>
+                        <td class="checkmark">✓ 固定题库</td>
+                        <td class="crossmark">✗ 无此功能</td>
+                        <td class="crossmark">✗ 无此功能</td>
+                    </tr>
+                    <tr>
+                        <td>智能错误分析</td>
+                        <td class="checkmark">✓ 原因分类</td>
+                        <td class="checkmark">✓ 答案解析</td>
+                        <td class="crossmark">✗ 无此功能</td>
+                        <td class="crossmark">✗ 无此功能</td>
+                    </tr>
+                    <tr>
+                        <td>学习进度自适应</td>
+                        <td class="checkmark">✓ 自动调整</td>
+                        <td class="crossmark">✗ 固定进度</td>
+                        <td class="crossmark">✗ 无此功能</td>
+                        <td class="checkmark">✓ 手动调整</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>学伴Pro</h3>
+                    <p>让学习从"被动接收"变成"主动闭环"的全场景学习辅助助手</p>
+                </div>
+                <div class="footer-section">
+                    <h3>核心功能</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">智能目标拆解</a></li>
+                        <li><a href="#">知识整合助手</a></li>
+                        <li><a href="#">个性化练习库</a></li>
+                        <li><a href="#">实时反馈与复盘</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>适用场景</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">K12学习</a></li>
+                        <li><a href="#">大学考试</a></li>
+                        <li><a href="#">职业提升</a></li>
+                        <li><a href="#">语言学习</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">用户反馈</a></li>
+                        <li><a href="#">商务合作</a></li>
+                        <li><a href="#">加入我们</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 学伴Pro 全场景学习辅助助手. 保留所有权利.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 功能标签切换
+        document.querySelectorAll('.feature-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有active类
+                document.querySelectorAll('.feature-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.feature-content').forEach(c => c.classList.remove('active'));
+                
+                // 添加active类到当前标签
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-content`).classList.add('active');
+            });
+        });
+        
+        // 按钮交互效果
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+                
+                if(this.classList.contains('btn-primary')) {
+                    alert('感谢您的关注！学伴Pro即将上线，敬请期待！');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
