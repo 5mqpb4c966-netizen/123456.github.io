@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时光胶囊·情绪盲盒</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --primary: #8a6dff;
+            --primary-light: #a892ff;
+            --secondary: #ff7eb3;
+            --accent: #7afcff;
+            --dark: #2d2b55;
+            --light: #f5f7ff;
+            --gray: #a0a0c0;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark) 0%, #4a3f76 100%);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(45, 43, 85, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 10s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+        }
+        
+        .nav {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-btn {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-btn.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--accent);
+        }
+        
+        .nav-btn::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: var(--accent);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-btn.active::after {
+            width: 80%;
+        }
+        
+        .content {
+            padding: 30px;
+            min-height: 500px;
+        }
+        
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .capsule-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .capsule-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .capsule-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .capsule-date {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .capsule-status {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            background: var(--primary);
+        }
+        
+        .capsule-content {
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+        
+        .capsule-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(138, 109, 255, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(138, 109, 255, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--light);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        textarea, input, select {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .radio-option {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .radio-option.selected {
+            border-color: var(--primary);
+            background: rgba(138, 109, 255, 0.2);
+        }
+        
+        .radio-option i {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .hug-btn {
+            background: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .hug-btn:hover {
+            background: rgba(255, 126, 179, 0.1);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin: 30px 0;
+        }
+        
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -36px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 3px solid var(--dark);
+        }
+        
+        .timeline-date {
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .word-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .word {
+            padding: 5px 10px;
+            background: rgba(138, 109, 255, 0.2);
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .word.size-1 { font-size: 0.8rem; opacity: 0.7; }
+        .word.size-2 { font-size: 1rem; opacity: 0.8; }
+        .word.size-3 { font-size: 1.2rem; opacity: 0.9; }
+        .word.size-4 { font-size: 1.4rem; opacity: 1; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--dark);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            animation: scaleIn 0.3s ease;
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .record-btn {
+            background: var(--secondary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 126, 179, 0.3);
+        }
+        
+        .record-btn.recording {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 126, 179, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 126, 179, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 126, 179, 0); }
+        }
+        
+        .audio-player {
+            width: 100%;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-btn {
+                padding: 12px 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>时光胶囊·情绪盲盒</h1>
+            <p class="subtitle">用时间沉淀情绪，用未知连接共鸣</p>
+        </div>
+        
+        <div class="nav">
+            <button class="nav-btn active" data-target="create">创建胶囊</button>
+            <button class="nav-btn" data-target="my-capsules">我的胶囊</button>
+            <button class="nav-btn" data-target="matched">匹配盲盒</button>
+            <button class="nav-btn" data-target="insights">情绪洞察</button>
+        </div>
+        
+        <div class="content">
+            <!-- 创建胶囊界面 -->
+            <div class="screen active" id="create">
+                <h2>记录此刻心情</h2>
+                <p>将当下的情绪封存，在未来与它重逢</p>
+                
+                <div class="form-group">
+                    <label>选择记录方式</label>
+                    <div class="radio-group">
+                        <div class="radio-option selected" data-type="text">
+                            <i class="fas fa-edit"></i>
+                            <span>文字记录</span>
+                        </div>
+                        <div class="radio-option" data-type="voice">
+                            <i class="fas fa-microphone"></i>
+                            <span>语音记录</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group" id="text-input">
+                    <label>写下此刻的心情</label>
+                    <textarea placeholder="今天的心情如何？有什么想对未来的自己说的吗？"></textarea>
+                </div>
+                
+                <div class="form-group hidden" id="voice-input">
+                    <label>录制语音心情</label>
+                    <div class="record-btn">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <p class="text-center">点击上方按钮开始录音</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>设置解锁时间</label>
+                    <select>
+                        <option value="1month">1个月后</option>
+                        <option value="3months">3个月后</option>
+                        <option value="6months">6个月后</option>
+                        <option value="1year">1年后</option>
+                        <option value="3years">3年后</option>
+                        <option value="5years">5年后</option>
+                        <option value="custom">自定义条件</option>
+                    </select>
+                </div>
+                
+                <div class="form-group hidden" id="custom-condition">
+                    <label>自定义解锁条件</label>
+                    <input type="text" placeholder="例如：考上研究生后、和TA复合后...">
+                </div>
+                
+                <div class="form-group">
+                    <label>是否允许匹配</label>
+                    <div class="radio-group">
+                        <div class="radio-option selected" data-match="yes">
+                            <i class="fas fa-user-friends"></i>
+                            <span>允许匹配</span>
+                            <small>与同期的陌生人交换心情</small>
+                        </div>
+                        <div class="radio-option" data-match="no">
+                            <i class="fas fa-user-lock"></i>
+                            <span>仅自己可见</span>
+                            <small>私密保存，不与他人分享</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn" id="create-capsule">
+                    <i class="fas fa-capsules"></i>
+                    封存情绪胶囊
+                </button>
+            </div>
+            
+            <!-- 我的胶囊界面 -->
+            <div class="screen" id="my-capsules">
+                <h2>我的情绪胶囊</h2>
+                <p>等待开启或已经解锁的时光记忆</p>
+                
+                <div class="capsule-list">
+                    <div class="capsule-card">
+                        <div class="capsule-header">
+                            <div class="capsule-date">2023年10月15日 创建</div>
+                            <div class="capsule-status">2024年4月15日 解锁</div>
+                        </div>
+                        <div class="capsule-content">
+                            今天终于提交了辞职信，既兴奋又忐忑。不知道半年后的我，是否找到了心仪的工作？希望那时的我比现在更勇敢。
+                        </div>
+                        <div class="capsule-footer">
+                            <div><i class="fas fa-comment"></i> 文字记录</div>
+                            <div><i class="fas fa-user-friends"></i> 允许匹配</div>
+                        </div>
+                    </div>
+                    
+                    <div class="capsule-card">
+                        <div class="capsule-header">
+                            <div class="capsule-date">2023年8月22日 创建</div>
+                            <div class="capsule-status">已解锁 · 2023年11月22日</div>
+                        </div>
+                        <div class="capsule-content">
+                            今天和妈妈大吵了一架，因为工作城市的选择。我知道她担心我，但我真的想去上海试试。三个月后，我还会坚持这个决定吗？
+                        </div>
+                        <div class="capsule-footer">
+                            <div><i class="fas fa-microphone"></i> 语音记录</div>
+                            <div><i class="fas fa-user-lock"></i> 仅自己可见</div>
+                        </div>
+                    </div>
+                    
+                    <div class="capsule-card">
+                        <div class="capsule-header">
+                            <div class="capsule-date">2023年5月10日 创建</div>
+                            <div class="capsule-status">考上研究生后解锁</div>
+                        </div>
+                        <div class="capsule-content">
+                            今天是考研复习的第128天，很累，但还在坚持。如果未来的我看到了这个胶囊，希望是带着录取通知书打开的。
+                        </div>
+                        <div class="capsule-footer">
+                            <div><i class="fas fa-comment"></i> 文字记录</div>
+                            <div><i class="fas fa-user-friends"></i> 允许匹配</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 匹配盲盒界面 -->
+            <div class="screen" id="matched">
+                <h2>情绪盲盒</h2>
+                <p>来自陌生人的同期心情，与你产生跨时空共鸣</p>
+                
+                <div class="capsule-card">
+                    <div class="capsule-header">
+                        <div class="capsule-date">2023年6月 创建 · 2023年9月 解锁</div>
+                        <div class="capsule-status">与你的胶囊同期</div>
+                    </div>
+                    <div class="capsule-content">
+                        今天毕业了，站在校门口突然不知道该往哪走。四年的朋友各奔东西，这座城市突然变得陌生。希望未来的我能找到属于自己的方向。
+                    </div>
+                    <div class="capsule-footer">
+                        <div><i class="fas fa-heart" style="color: var(--secondary);"></i> 已收到 3 个匿名抱抱</div>
+                        <button class="hug-btn">
+                            <i class="fas fa-hands-helping"></i>
+                            送出一个抱抱
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="capsule-card">
+                    <div class="capsule-header">
+                        <div class="capsule-date">2023年2月 创建 · 2023年8月 解锁</div>
+                        <div class="capsule-status">与你的胶囊同期</div>
+                    </div>
+                    <div class="capsule-content">
+                        失恋第37天，还是会在深夜想起TA。但今天我开始学画画了，老师说我有天赋。希望半年后的我已经走出了这段感情，并且画得很好了吧。
+                    </div>
+                    <div class="capsule-footer">
+                        <div><i class="fas fa-heart" style="color: var(--secondary);"></i> 已收到 5 个匿名抱抱</div>
+                        <button class="hug-btn">
+                            <i class="fas fa-hands-helping"></i>
+                            送出一个抱抱
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <h3>暂无更多匹配胶囊</h3>
+                    <p>创建更多情绪胶囊，解锁更多同期心情盲盒</p>
+                    <button class="btn btn-secondary" id="go-to-create">
+                        <i class="fas fa-plus"></i>
+                        创建新胶囊
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 情绪洞察界面 -->
+            <div class="screen" id="insights">
+                <h2>情绪年度报告</h2>
+                <p>你的心情轨迹与情绪关键词</p>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-label">已创建胶囊</div>
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">个心情时刻</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">已解锁胶囊</div>
+                        <div class="stat-value">7</div>
+                        <div class="stat-label">次时光对话</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">收到抱抱</div>
+                        <div class="stat-value">9</div>
+                        <div class="stat-label">份陌生温暖</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">送出抱抱</div>
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">次心意传递</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 30px;">情绪关键词云</h3>
+                <div class="word-cloud">
+                    <span class="word size-4">期待</span>
+                    <span class="word size-3">迷茫</span>
+                    <span class="word size-2">坚持</span>
+                    <span class="word size-3">成长</span>
+                    <span class="word size-1">忐忑</span>
+                    <span class="word size-2">希望</span>
+                    <span class="word size-4">勇敢</span>
+                    <span class="word size-1">思念</span>
+                    <span class="word size-3">自由</span>
+                    <span class="word size-2">感恩</span>
+                </div>
+                
+                <h3 style="margin-top: 30px;">心情时间线</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">2023年10月</div>
+                        <div class="capsule-content">提交辞职信，准备新的职业道路</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2023年8月</div>
+                        <div class="capsule-content">与家人讨论未来城市选择</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2023年6月</div>
+                        <div class="capsule-content">完成一个重要项目，获得认可</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2023年5月</div>
+                        <div class="capsule-content">考研复习关键期，压力较大</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2023年2月</div>
+                        <div class="capsule-content">开始学习新技能，充满期待</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 成功创建胶囊的模态框 -->
+    <div class="modal" id="success-modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div style="text-align: center; padding: 20px;">
+                <i class="fas fa-capsules" style="font-size: 4rem; color: var(--accent); margin-bottom: 20px;"></i>
+                <h2>情绪胶囊已封存！</h2>
+                <p>你的心情已被安全存储，将在设定时间解锁。</p>
+                <p>届时你会收到提醒，重温此刻心情。</p>
+                <button class="btn" style="margin-top: 20px;">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面导航
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // 更新导航按钮状态
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 显示对应内容
+                const target = this.getAttribute('data-target');
+                document.querySelectorAll('.screen').forEach(screen => {
+                    screen.classList.remove('active');
+                });
+                document.getElementById(target).classList.add('active');
+            });
+        });
+        
+        // 记录方式选择
+        document.querySelectorAll('.radio-option[data-type]').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.radio-option[data-type]').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                
+                const type = this.getAttribute('data-type');
+                if (type === 'text') {
+                    document.getElementById('text-input').classList.remove('hidden');
+                    document.getElementById('voice-input').classList.add('hidden');
+                } else {
+                    document.getElementById('text-input').classList.add('hidden');
+                    document.getElementById('voice-input').classList.remove('hidden');
+                }
+            });
+        });
+        
+        // 匹配选项选择
+        document.querySelectorAll('.radio-option[data-match]').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.radio-option[data-match]').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+        
+        // 自定义解锁条件
+        document.querySelector('select').addEventListener('change', function() {
+            if (this.value === 'custom') {
+                document.getElementById('custom-condition').classList.remove('hidden');
+            } else {
+                document.getElementById('custom-condition').classList.add('hidden');
+            }
+        });
+        
+        // 创建胶囊
+        document.getElementById('create-capsule').addEventListener('click', function() {
+            document.getElementById('success-modal').classList.add('active');
+        });
+        
+        // 关闭模态框
+        document.querySelector('.close-modal').addEventListener('click', function() {
+            document.getElementById('success-modal').classList.remove('active');
+        });
+        
+        // 前往创建页面
+        document.getElementById('go-to-create').addEventListener('click', function() {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.nav-btn[data-target="create"]').classList.add('active');
+            
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById('create').classList.add('active');
+        });
+        
+        // 录音按钮效果
+        const recordBtn = document.querySelector('.record-btn');
+        recordBtn.addEventListener('click', function() {
+            this.classList.toggle('recording');
+            if (this.classList.contains('recording')) {
+                this.innerHTML = '<i class="fas fa-square"></i>';
+            } else {
+                this.innerHTML = '<i class="fas fa-microphone"></i>';
+            }
+        });
+        
+        // 送抱抱交互
+        document.querySelectorAll('.hug-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const heartCount = this.parentElement.querySelector('.fa-heart').parentElement;
+                const currentCount = parseInt(heartCount.textContent.match(/\d+/)[0]);
+                heartCount.innerHTML = `<i class="fas fa-heart" style="color: var(--secondary);"></i> 已收到 ${currentCount + 1} 个匿名抱抱`;
+                
+                this.innerHTML = '<i class="fas fa-check"></i> 已送出抱抱';
+                this.disabled = true;
+                
+                // 显示感谢提示
+                setTimeout(() => {
+                    alert('你的温暖已送出！对方会收到"有人为你的过去送上了温暖"的提示。');
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>
