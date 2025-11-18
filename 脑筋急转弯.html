@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>脑筋急转弯大挑战</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Rounded MT Bold', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        h1 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: #4a4a4a;
+            margin-bottom: 15px;
+        }
+        
+        p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #ff9966, #ff5e62);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 10px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 94, 98, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 94, 98, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, #36d1dc, #5b86e5);
+        }
+        
+        .difficulty-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .difficulty-btn {
+            flex: 1;
+            min-width: 120px;
+            margin: 5px;
+        }
+        
+        .question-container {
+            margin: 20px 0;
+        }
+        
+        .question-text {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .answer-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        .answer-input:focus {
+            border-color: #ff9966;
+            outline: none;
+        }
+        
+        .hint-btn {
+            background: linear-gradient(to right, #7b4397, #dc2430);
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #555;
+        }
+        
+        .score-display {
+            font-weight: bold;
+            color: #ff5e62;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #ff9966, #ff5e62);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .feedback {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+            opacity: 1;
+        }
+        
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            opacity: 1;
+        }
+        
+        .result-container {
+            margin: 20px 0;
+        }
+        
+        .result-score {
+            font-size: 3rem;
+            color: #ff5e62;
+            margin: 20px 0;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .combo-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff5e62;
+            z-index: 100;
+            animation: popup 1s ease;
+        }
+        
+        @keyframes popup {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            70% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 开始界面 -->
+        <div id="start-screen">
+            <h1>脑筋急转弯大挑战</h1>
+            <p>准备好挑战你的思维极限了吗？选择难度开始游戏！</p>
+            
+            <div class="difficulty-buttons">
+                <button class="btn difficulty-btn" data-difficulty="easy">简单模式</button>
+                <button class="btn difficulty-btn" data-difficulty="medium">中等模式</button>
+                <button class="btn difficulty-btn" data-difficulty="hard">困难模式</button>
+            </div>
+            
+            <button id="start-btn" class="btn">开始游戏</button>
+            
+            <div style="margin-top: 30px;">
+                <h3>游戏规则</h3>
+                <p>• 每个难度有10道题目</p>
+                <p>• 每道题有3次回答机会</p>
+                <p>• 首次答对获得15分，之后答对获得10分</p>
+                <p>• 使用提示会减少得分</p>
+                <p>• 连续答对3题有额外奖励！</p>
+            </div>
+        </div>
+        
+        <!-- 游戏界面 -->
+        <div id="game-screen" class="hidden">
+            <div class="game-info">
+                <div>得分: <span id="score" class="score-display">0</span></div>
+                <div>题目: <span id="question-count">1/10</span></div>
+                <div>剩余提示: <span id="hint-count">3</span></div>
+            </div>
+            
+            <div class="progress-bar">
+                <div id="progress" class="progress"></div>
+            </div>
+            
+            <div class="question-container">
+                <div id="question-text" class="question-text">题目加载中...</div>
+                
+                <input type="text" id="answer-input" class="answer-input" placeholder="请输入你的答案...">
+                
+                <div id="feedback" class="feedback"></div>
+                
+                <button id="submit-btn" class="btn">提交答案</button>
+                <button id="hint-btn" class="btn hint-btn">提示</button>
+            </div>
+        </div>
+        
+        <!-- 结束界面 -->
+        <div id="end-screen" class="hidden">
+            <h1>游戏结束</h1>
+            
+            <div class="result-container">
+                <h2>你的得分</h2>
+                <div id="final-score" class="result-score">0</div>
+                <p id="result-message">再接再厉！</p>
+            </div>
+            
+            <button id="restart-btn" class="btn">再来一局</button>
+            <button id="back-to-menu" class="btn btn-secondary">返回主菜单</button>
+        </div>
+    </div>
+
+    <script>
+        // 题库数据
+        const questionBank = {
+            easy: [
+                {
+                    question: "什么东西越洗越脏？",
+                    answer: "水",
+                    hint: "它是液体，能清洁其他东西"
+                },
+                {
+                    question: "什么车寸步难行？",
+                    answer: "风车",
+                    hint: "它不是用来载人的"
+                },
+                {
+                    question: "什么人没当爸爸就先当公公了？",
+                    answer: "太监",
+                    hint: "古代宫廷中的一种职业"
+                },
+                {
+                    question: "什么蛋打不烂，煮不熟，更不能吃？",
+                    answer: "考试得的零蛋",
+                    hint: "和学习成绩有关"
+                },
+                {
+                    question: "什么东西不能吃？",
+                    answer: "东西方向",
+                    hint: "这是一个方向"
+                },
+                {
+                    question: "什么酒不能喝？",
+                    answer: "碘酒",
+                    hint: "它是一种药品"
+                },
+                {
+                    question: "什么鱼最聪明？",
+                    answer: "鲸鱼",
+                    hint: "它不是鱼，但名字里有鱼"
+                },
+                {
+                    question: "什么门永远关不上？",
+                    answer: "球门",
+                    hint: "和运动有关"
+                },
+                {
+                    question: "什么书你不可能在书店里买到？",
+                    answer: "秘书",
+                    hint: "这是一种职业"
+                },
+                {
+                    question: "最不听话的是谁？",
+                    answer: "聋子",
+                    hint: "和听力有关"
+                }
+            ],
+            medium: [
+                {
+                    question: "什么东西有五个头，但人不觉得它怪？",
+                    answer: "手脚",
+                    hint: "人体的一部分"
+                },
+                {
+                    question: "什么英文字母最多人喜欢听？",
+                    answer: "CD",
+                    hint: "和音乐有关"
+                },
+                {
+                    question: "什么东西晚上才生出尾巴呢？",
+                    answer: "流星",
+                    hint: "出现在夜空中"
+                },
+                {
+                    question: "家人问医生病人的情况，医生只举起5个手指，家人就哭了，是什么原因呢？",
+                    answer: "三长两短",
+                    hint: "和手指长度有关"
+                },
+                {
+                    question: "什么东西比乌鸦更讨厌？",
+                    answer: "乌鸦嘴",
+                    hint: "和说话有关"
+                },
+                {
+                    question: "为什么刚出生的小孩只有一只左眼睛？",
+                    answer: "人本来就只有一只左眼睛",
+                    hint: "这是事实"
+                },
+                {
+                    question: "哪颗牙最后长出来？",
+                    answer: "假牙",
+                    hint: "不是自然生长的"
+                },
+                {
+                    question: "什么东西愈生气，它便愈大？",
+                    answer: "脾气",
+                    hint: "和情绪有关"
+                },
+                {
+                    question: "偷什么东西不犯法？",
+                    answer: "偷笑",
+                    hint: "这是一种表情"
+                },
+                {
+                    question: "什么东西说父亲时不会相碰，叫爸爸时却会碰到两次？",
+                    answer: "嘴唇",
+                    hint: "说话时会用到"
+                }
+            ],
+            hard: [
+                {
+                    question: "太平洋的中间是什么？",
+                    answer: "平",
+                    hint: "看这个词的组成"
+                },
+                {
+                    question: "把一只鸡和一只鹅同时放在冰山上，为什么鸡死了鹅没死？",
+                    answer: "鹅是企鹅",
+                    hint: "考虑一下鹅的种类"
+                },
+                {
+                    question: "四个人在一间小屋里打麻将（没有其他人在看着），这时警察来了，四个人都跑了，可是警察到了屋里又抓到一个人，为什么？",
+                    answer: "四个人在打一个叫麻将的人",
+                    hint: "重新理解'打麻将'这个词"
+                },
+                {
+                    question: "万兽大王是谁？",
+                    answer: "动物园园长",
+                    hint: "和动物管理有关"
+                },
+                {
+                    question: "用什么可以解开所有的谜？",
+                    answer: "答案",
+                    hint: "很直接"
+                },
+                {
+                    question: "专爱打听别人事的人是谁？",
+                    answer: "记者",
+                    hint: "一种职业"
+                },
+                {
+                    question: "谁说话的声音传得最远？",
+                    answer: "打电话的人",
+                    hint: "和通讯有关"
+                },
+                {
+                    question: "什么东西的制造日期和有效期是同一天？",
+                    answer: "日报",
+                    hint: "和新闻有关"
+                },
+                {
+                    question: "小咪昨晚花了整整一个晚上在历史课本上，可第二天妈妈还是骂她不用功，为什么？",
+                    answer: "她用历史课本当枕头睡",
+                    hint: "考虑一下'在课本上'的不同含义"
+                },
+                {
+                    question: "能否用树叶遮住天空？",
+                    answer: "只要用树叶盖住眼睛",
+                    hint: "从个人视角考虑"
+                }
+            ]
+        };
+
+        // 游戏状态
+        let gameState = {
+            currentScreen: 'start',
+            difficulty: 'easy',
+            score: 0,
+            currentQuestionIndex: 0,
+            wrongAttempts: 0,
+            hintsUsed: 0,
+            maxHints: 3,
+            comboCount: 0,
+            questions: [],
+            startTime: null
+        };
+
+        // DOM元素
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const endScreen = document.getElementById('end-screen');
+        const startBtn = document.getElementById('start-btn');
+        const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+        const questionText = document.getElementById('question-text');
+        const answerInput = document.getElementById('answer-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const hintBtn = document.getElementById('hint-btn');
+        const scoreDisplay = document.getElementById('score');
+        const questionCount = document.getElementById('question-count');
+        const hintCount = document.getElementById('hint-count');
+        const progressBar = document.getElementById('progress');
+        const feedback = document.getElementById('feedback');
+        const finalScore = document.getElementById('final-score');
+        const resultMessage = document.getElementById('result-message');
+        const restartBtn = document.getElementById('restart-btn');
+        const backToMenuBtn = document.getElementById('back-to-menu');
+
+        // 初始化游戏
+        function initGame() {
+            // 设置难度按钮事件
+            difficultyBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    gameState.difficulty = this.getAttribute('data-difficulty');
+                    // 更新按钮样式
+                    difficultyBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // 设置开始按钮事件
+            startBtn.addEventListener('click', startGame);
+
+            // 设置提交答案事件
+            submitBtn.addEventListener('click', checkAnswer);
+            answerInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkAnswer();
+                }
+            });
+
+            // 设置提示按钮事件
+            hintBtn.addEventListener('click', showHint);
+
+            // 设置重新开始和返回菜单事件
+            restartBtn.addEventListener('click', startGame);
+            backToMenuBtn.addEventListener('click', showStartScreen);
+        }
+
+        // 显示开始界面
+        function showStartScreen() {
+            startScreen.classList.remove('hidden');
+            gameScreen.classList.add('hidden');
+            endScreen.classList.add('hidden');
+            gameState.currentScreen = 'start';
+        }
+
+        // 开始游戏
+        function startGame() {
+            // 重置游戏状态
+            gameState.score = 0;
+            gameState.currentQuestionIndex = 0;
+            gameState.wrongAttempts = 0;
+            gameState.hintsUsed = 0;
+            gameState.comboCount = 0;
+            gameState.startTime = new Date();
+            
+            // 根据难度选择题目
+            gameState.questions = [...questionBank[gameState.difficulty]];
+            shuffleArray(gameState.questions);
+            
+            // 更新界面
+            startScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            endScreen.classList.add('hidden');
+            gameState.currentScreen = 'game';
+            
+            // 更新显示
+            updateScore();
+            updateQuestionCount();
+            updateHintCount();
+            updateProgressBar();
+            showQuestion();
+            
+            // 聚焦输入框
+            answerInput.focus();
+        }
+
+        // 显示当前题目
+        function showQuestion() {
+            if (gameState.currentQuestionIndex >= gameState.questions.length) {
+                endGame();
+                return;
+            }
+            
+            const question = gameState.questions[gameState.currentQuestionIndex];
+            questionText.textContent = question.question;
+            answerInput.value = '';
+            feedback.textContent = '';
+            feedback.className = 'feedback';
+            gameState.wrongAttempts = 0;
+            
+            updateQuestionCount();
+            updateProgressBar();
+        }
+
+        // 检查答案
+        function checkAnswer() {
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            if (!userAnswer) return;
+            
+            const question = gameState.questions[gameState.currentQuestionIndex];
+            const correctAnswer = question.answer.toLowerCase();
+            
+            // 简单答案匹配（忽略标点符号和空格）
+            const normalizedUserAnswer = userAnswer.replace(/[^\w\u4e00-\u9fa5]/g, '');
+            const normalizedCorrectAnswer = correctAnswer.replace(/[^\w\u4e00-\u9fa5]/g, '');
+            
+            if (normalizedUserAnswer === normalizedCorrectAnswer) {
+                // 答对了
+                handleCorrectAnswer();
+            } else {
+                // 答错了
+                handleIncorrectAnswer();
+            }
+        }
+
+        // 处理正确答案
+        function handleCorrectAnswer() {
+            // 计算得分
+            let points = 10;
+            if (gameState.wrongAttempts === 0) {
+                points = 15; // 首次答对额外加分
+            }
+            
+            // 使用提示会减少得分
+            if (gameState.hintsUsed > 0) {
+                points = Math.max(5, points - gameState.hintsUsed * 3);
+            }
+            
+            gameState.score += points;
+            gameState.comboCount++;
+            
+            // 显示反馈
+            feedback.textContent = `答对了！+${points}分`;
+            feedback.className = 'feedback correct';
+            
+            // 检查连击
+            if (gameState.comboCount >= 3) {
+                showComboMessage();
+                gameState.score += 10; // 连击奖励
+                gameState.comboCount = 0;
+                updateScore();
+            }
+            
+            updateScore();
+            
+            // 延迟进入下一题
+            setTimeout(() => {
+                gameState.currentQuestionIndex++;
+                gameState.hintsUsed = 0;
+                showQuestion();
+            }, 1500);
+        }
+
+        // 处理错误答案
+        function handleIncorrectAnswer() {
+            gameState.wrongAttempts++;
+            gameState.comboCount = 0;
+            
+            if (gameState.wrongAttempts >= 3) {
+                // 超过最大错误次数
+                const question = gameState.questions[gameState.currentQuestionIndex];
+                feedback.textContent = `很遗憾，正确答案是：${question.answer}`;
+                feedback.className = 'feedback incorrect';
+                
+                // 延迟进入下一题
+                setTimeout(() => {
+                    gameState.currentQuestionIndex++;
+                    gameState.hintsUsed = 0;
+                    showQuestion();
+                }, 2000);
+            } else {
+                // 还有机会
+                feedback.textContent = `不对哦～ 还有${3 - gameState.wrongAttempts}次机会`;
+                feedback.className = 'feedback incorrect';
+                answerInput.focus();
+            }
+        }
+
+        // 显示提示
+        function showHint() {
+            if (gameState.hintsUsed >= gameState.maxHints) {
+                alert('提示次数已用完！');
+                return;
+            }
+            
+            const question = gameState.questions[gameState.currentQuestionIndex];
+            alert(`提示：${question.hint}`);
+            gameState.hintsUsed++;
+            updateHintCount();
+        }
+
+        // 显示连击消息
+        function showComboMessage() {
+            const comboMessage = document.createElement('div');
+            comboMessage.className = 'combo-message';
+            comboMessage.textContent = '三连击！额外+10分！';
+            document.body.appendChild(comboMessage);
+            
+            setTimeout(() => {
+                document.body.removeChild(comboMessage);
+            }, 1500);
+        }
+
+        // 结束游戏
+        function endGame() {
+            gameScreen.classList.add('hidden');
+            endScreen.classList.remove('hidden');
+            gameState.currentScreen = 'end';
+            
+            // 计算游戏时间
+            const endTime = new Date();
+            const timeSpent = Math.round((endTime - gameState.startTime) / 1000);
+            const minutes = Math.floor(timeSpent / 60);
+            const seconds = timeSpent % 60;
+            
+            // 显示最终得分
+            finalScore.textContent = gameState.score;
+            
+            // 根据得分显示不同消息
+            let message = '';
+            const maxScore = gameState.questions.length * 15;
+            const percentage = Math.round((gameState.score / maxScore) * 100);
+            
+            if (percentage >= 90) {
+                message = `太厉害了！你击败了${percentage}%的玩家！`;
+            } else if (percentage >= 70) {
+                message = `表现不错！你击败了${percentage}%的玩家！`;
+            } else if (percentage >= 50) {
+                message = `再接再厉！你击败了${percentage}%的玩家！`;
+            } else {
+                message = `加油练习！你击败了${percentage}%的玩家！`;
+            }
+            
+            resultMessage.textContent = `${message} 用时: ${minutes}分${seconds}秒`;
+        }
+
+        // 更新分数显示
+        function updateScore() {
+            scoreDisplay.textContent = gameState.score;
+        }
+
+        // 更新题目计数
+        function updateQuestionCount() {
+            questionCount.textContent = `${gameState.currentQuestionIndex + 1}/${gameState.questions.length}`;
+        }
+
+        // 更新提示计数
+        function updateHintCount() {
+            hintCount.textContent = gameState.maxHints - gameState.hintsUsed;
+        }
+
+        // 更新进度条
+        function updateProgressBar() {
+            const progress = ((gameState.currentQuestionIndex) / gameState.questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // 随机打乱数组
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // 初始化游戏
+        window.onload = initGame;
+    </script>
+</body>
+</html>
